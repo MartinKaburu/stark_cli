@@ -20,7 +20,7 @@ class User(object):
         conn.commit()
         return user
 
-    def signup(self, username, password):
+    def signup(self, role, username, password):
         """Signup the user"""
         role = self.role()
         user_exists = self.user_exists()
@@ -28,7 +28,7 @@ class User(object):
             print("that user already exists")
         username = self.username
         password = self.password
-        cur.execute('insert into users(username,password) values({},{})'.format(username,password))
+        cur.execute('insert into users(username,password, role) values({},{},{})'.format(username,password,role))
         
 
     def login(self, username, password): 
@@ -38,10 +38,5 @@ class User(object):
             print ("you have successfully logged in")
         print("wrong username or password")
 
-    def roles(self, role_id):
-        cur = conn.cursor()
-        cur.execute('insert into users(role) values('{}')'.format(role_id))
-   
-   
 if __name__ == '__main__':
     
