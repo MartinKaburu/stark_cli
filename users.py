@@ -22,6 +22,7 @@ class User(object):
 
     def signup(self, username, password):
         """Signup the user"""
+        role = self.role()
         user_exists = self.user_exists()
         if not user_exists:
             print("that user already exists")
@@ -36,6 +37,11 @@ class User(object):
         if user_exists:
             print ("you have successfully logged in")
         print("wrong username or password")
+
+    def roles(self, role_id):
+        cur = conn.cursor()
+        cur.execute('insert into users(role) values('{}')'.format(role_id))
+   
    
 if __name__ == '__main__':
     
