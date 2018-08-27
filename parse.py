@@ -1,10 +1,11 @@
 #!/usr/bin/python
-
+from users import User
 '''Parse the CLI arguments
 '''
 import sys
 import getopt
 
+person = User()
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -33,7 +34,7 @@ if __name__ == '__main__':
             edited = arg
         elif opt in ['--login', '-l']:
             print(username, password)
-            #login(username, password)
+            person.login(username, password)
         elif opt in ['--signup', '-s']:
             print(role, username, password)
-            #signup(role, password, username)
+            person.signup(role, password, username)
