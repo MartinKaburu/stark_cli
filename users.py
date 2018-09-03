@@ -49,5 +49,7 @@ class User(object):
             line = f.readline()
             username, password = line.split(' ')
             ret = self.login(username, password)
-            return ret, username
+            if "[+] you have successfully logged in" in ret:
+                return ret, username
+            return "[+] Invalid credentials"
         return("[+] please login to continue")

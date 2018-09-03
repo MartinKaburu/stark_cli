@@ -28,22 +28,19 @@ class Comments(object):
 			ret, username = auth.auth()
 		except:
 			return "[+] Please log in to continue"
-		if ret:
-			sql = 'SELECT * FROM users WHERE username=%s;'
-			self.cursor.execute(sql, ([username]))
-			user = self.cursor.fetchall()
-			user_id = user[0][0]
-			role = user[0][3]
-			sql = 'INSERT INTO comments(content, user_id) VALUES(%s, %s);'
-			self.cursor.execute(sql, (comment, user_id))
-			CONNECTION.commit()
-			return "[+] Comment posted successfully"
-		return ret
+		sql = 'SELECT * FROM users WHERE username=%s;'
+		self.cursor.execute(sql, ([username]))
+		user = self.cursor.fetchall()
+		user_id = user[0][0]
+		role = user[0][3]
+		sql = 'INSERT INTO comments(content, user_id) VALUES(%s, %s);'
+		self.cursor.execute(sql, (comment, user_id))
+		CONNECTION.commit()
+		return "[+] Comment posted successfully"
 
 	def all(self):
 		'''Get all comments
 		'''
-
 		sql = 'SELECT * FROM comments;'
 		self.cursor.execute(sql)
 		comments = self.cursor.fetchall()
@@ -60,4 +57,9 @@ class Comments(object):
 
 	def edit(self):
 		'''Edit a comment
+		'''
+
+
+	def delete(self):
+		'''Delete a comment
 		'''
