@@ -8,14 +8,14 @@ class Database:
         """ local credentials """
         self.dbhost = '127.0.0.1'
         self.dbname = 'starks'
-        self.dbuser = 'starks'
-        self.dbpassword = 'starks'
+        self.dbuser = 'postgres'
+        self.dbpassword = 'kaburu@andela'
 
         """ postgres credentials """
         self.db_postgres_host = '127.0.0.1'
         self.db_postgres_dbname = 'postgres'
         self.db_postgres_user = 'postgres'
-        self.db_postgres_password = 'root'
+        self.db_postgres_password = 'kaburu@andela'
 
         self.tables = (
             """
@@ -43,7 +43,7 @@ class Database:
                 lastLoggedInAt TIMESTAMP,
                 FOREIGN KEY (user_id)
                     REFERENCES users (id)
-                    ON UPDATE CASCADE ON DELETE CASCADE            
+                    ON UPDATE CASCADE ON DELETE CASCADE
             )
             """
         )
@@ -57,10 +57,9 @@ class Database:
             answer = cur.fetchall()
 
             """ check if database exists to drop it first """
-            if len(answer) > 0:
+            if answer:
                 print("Database {} exists".format(self.dbname))
                 cur.execute("DROP DATABASE {};".format(self.dbname))
-                cur.execute("DROP ROLE {};".format(self.dbuser))
                 con.commit()
                 con.close()
                 self.create_database_and_user()
@@ -80,7 +79,6 @@ class Database:
                                    host=self.db_postgres_host, password=self.db_postgres_password)
             con.autocommit = True
             cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            cur.execute("CREATE ROLE {} WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD '{}'".format(self.dbname, self.dbuser))
             cur.execute('CREATE DATABASE {} OWNER {};'.format(self.dbname, self.dbuser))
             con.commit()
             con.close()

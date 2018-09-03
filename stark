@@ -1,0 +1,51 @@
+#!/usr/bin/python
+'''Parse the CLI arguments
+'''
+import json
+import sys
+import getopt
+
+from users import User
+from comments import Comments
+
+person = User()
+factory = Comments()
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Usage: usage")
+        exit(1)
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'slu:p:c:der:i:a' , ['signup', 'login', 'username=', 'password=', 'comment=', 'delete', 'edit=', 'role=', 'id=', 'all'])
+    except getopt.GetoptError:
+        print('Invalid argument')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ['--username', '-u']:
+            username = arg
+        elif opt in ['--id', '-i']:
+            user_id = arg
+        elif opt in ['--password', '-p']:
+            password = arg
+        elif opt in ['--role', '-r']:
+            role = arg
+        elif opt in ['--comment', '-c']:
+            comment = arg
+            ret = factory.post_comment(comment)
+            print(ret)
+        elif opt in ['--edit', '-e']:
+            edited = arg
+        elif opt in ['--login', '-l']:
+            try:
+                ret = person.login(username, password)
+                print(ret)
+            except NameError:
+                print('[+] requires username and password')
+        elif opt in ['--signup', '-s']:
+            ret = person.signup(role, username, password)
+            print(ret)
+        elif opt in ['--all', '-a']:
+            ret = factory.all()
+            for comment in ret:
+                print(comment)

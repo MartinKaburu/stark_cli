@@ -1,97 +1,63 @@
-import psycopg2
+import psycopg2 as psycopg
+import os
+
+from users import  User
+
+auth = User()
+
+CONNECTION = psycopg.connect(\
+    dbname='starks', \
+    user='postgres', \
+    host='localhost', \
+    password='kaburu@andela'\
+    )
 
 class Comments(object):
-	def __init__(self,message, time_stamp, author, id, role):
-		self.id=id
-		self.message=message
-		self.author=author
-		self.role=role
+	def __init__(self):
+		'''Instantiate class
+		'''
+
+		self.cursor = CONNECTION.cursor()
 
 
+	def post_comment(self, comment):
+		'''Post a comment
+		'''
 
-   def run_query(query, inputs):
-    """Run queries with inputs"""
-    try:
-        db_instance = DbConn()
-        db_instance.cur.execute(query, inputs)
-        db_instance.conn.commit()
-        db_instance.close()
-        return True
+		try:
+			ret, username = auth.auth()
+		except:
+			return "[+] Please log in to continue"
+		if ret:
+			sql = 'SELECT * FROM users WHERE username=%s;'
+			self.cursor.execute(sql, ([username]))
+			user = self.cursor.fetchall()
+			user_id = user[0][0]
+			role = user[0][3]
+			sql = 'INSERT INTO comments(content, user_id) VALUES(%s, %s);'
+			self.cursor.execute(sql, (comment, user_id))
+			CONNECTION.commit()
+			return "[+] Comment posted successfully"
+		return ret
 
-    except psycopg2.Error:
-        return False		
-		
+	def all(self):
+		'''Get all comments
+		'''
 
-	def post_comment(self, user_id, ):
-
-         comment = comment.query.filter_by(user_id=user_id).first()
-         if  ==
-		cur.execute('INSERT INTO * comments {'id','message', 'time_stamp', 'user_id'} VALUE (('%s', '%s', '%s', '%s')(self.id, self.message, self.time_stamp, self.user_id)));
-		(cursor)
-		conn.commit()
-
-
-	
-
-	
-	def edit_comment(self, input = 'Give me your user_id', ):
-		if role='1':
-
-		  cur.execute("UPDATE comments SET message = %s, user_id=%s WHERE id = %s)VALUE (("%s", '%s', '%s', '%s'  )(self.id, self.message, self.time_stamp, self.author)); 
-		  conn.commit()
-
-	    else:
-	     cur.execute("UPDATE comments SET message = %s, user_id=%s WHERE id = %s)VALUE (("%s", '%s', '%s', '%s'  )(self.id, self.message, self.time_stamp, self.author)); 
-		  conn.commit()
-		 
-
-
-		
+		sql = 'SELECT * FROM comments;'
+		self.cursor.execute(sql)
+		comments = self.cursor.fetchall()
+		display = []
+		for comment in comments:
+			comm = {
+				"id": comment[0],
+				"user_id": comment[1],
+				"content": comment[2]
+			}
+			display.append(comm)
+		return display
 
 
-	def delete_comment(self,id, role):
-
-		if role=='2'or'3':
-
-    	comment = comments.query.filter_by(id=id).first()
-        comment.delete()
-		cur.execute('DELETE FROM comments WHERE id=%s ', (id))
-			conn.commit()
-
-		resp = {
-            "message": "success",
-            "description": "comment updated succesfully",
-            "text": text
-        }
-
-			return resp
-
-		else:
-			resp = {
-            "message": "Unauthorised User",
-            "description": " unauthorised user",
-            "text": text
-        }
-
-		 return 
-
-
-
-
-
-
-
-
-
-
-         
-
-
-		
-
-
-
-
-
-		
-
+	def edit(self):
+		'''Edit a comment
+		'''
