@@ -11,13 +11,68 @@ from comments import Comments
 person = User()
 factory = Comments()
 
+def usage():
+    usage = """
+################################################################################
+                                STARK_CLI
+################################################################################
+USAGE: ./stark [ARGUMENTS] [OPTION]
+::> OPTIONS
+    Signup::
+        Arguments:
+            --username or -u  = username
+            --password or -p = password
+            --role or -r = role //int >0<3
+                1 == user
+                2 == moderator
+                3 == admin
+        Example:
+            ./stark --username Martin --password mypass --role 3 --signup
+
+    Login::
+        Arguments:
+            --username or -u = username
+            --password or -p = password
+        Example:
+        ./stark --username Martin --password mypass --login
+
+    Post Comment::
+        Arguments:
+            --comment or -c = "Your comment"
+        Example:
+            ./stark -c "This is my first comment"
+
+    Edit Comment::
+        Arguments:
+            --id or -i = Comment id
+            --edit or -e = "New comment"
+        Example:
+            ./stark -i 1 -e "This is the edited comment"
+
+    Delete Comment::
+        Arguments:
+            --id or -i = Comment id
+        Example:
+            ./stark -i 1 --delete
+                or
+            ./stark -i 1 -d
+
+    Get All::
+        ./stark --all
+            or
+        ./stark -a
+"""
+    print(usage)
+
+
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: usage")
+        print('''Usage: ./stark [ARGUMENTS]... [OPTION]...
+Try './stark --help' for more information.''')
         exit(1)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'slu:p:c:der:i:a' , ['signup', 'login', 'username=', 'password=', 'comment=', 'delete', 'edit=', 'role=', 'id=', 'all'])
+        opts, args = getopt.getopt(sys.argv[1:], 'slu:p:c:de:r:i:ah' , ['signup', 'login', 'username=', 'password=', 'comment=', 'delete', 'edit=', 'role=', 'id=', 'all', 'help'])
     except getopt.GetoptError:
         print('Invalid argument')
         sys.exit(2)
@@ -25,7 +80,7 @@ if __name__ == '__main__':
         if opt in ['--username', '-u']:
             username = arg
         elif opt in ['--id', '-i']:
-            user_id = arg
+            id = arg
         elif opt in ['--password', '-p']:
             password = arg
         elif opt in ['--role', '-r']:
@@ -36,6 +91,11 @@ if __name__ == '__main__':
             print(ret)
         elif opt in ['--edit', '-e']:
             edited = arg
+            ret = factory.edit(edited, id)
+            print(ret)
+        elif opt in ['--delete', '-d']:
+            ret = factory.delete(id)
+            print(ret)
         elif opt in ['--login', '-l']:
             try:
                 ret = person.login(username, password)
@@ -49,3 +109,5 @@ if __name__ == '__main__':
             ret = factory.all()
             for comment in ret:
                 print(comment)
+        elif opt in ['--help', '-h']:
+            usage()
