@@ -55,10 +55,14 @@ class Comments():
         comments = self.cursor.fetchall()
         display = []
         for comment in comments:
+            sql = 'SELECT * FROM users WHERE id=%s;'
+            self.cursor.execute(sql, ([comment[1]]))
+            user = self.cursor.fetchone()
             comm = {
-            "id": comment[0],
+            "comment_id": comment[0],
             "user_id": comment[1],
-            "content": comment[2]
+            "author": user[1],
+            "comment": comment[2]
             }
             display.append(comm)
         return display
