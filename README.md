@@ -1,13 +1,17 @@
 # stark_cli
 team CLI project
 
-## Setup
+## clone
+  >$ git clone https://github.com/MartinKaburu/stark_cli.git
 
-Create environment
+  >$ cd stark_cli
 
-``virtualenv venv --no-site-packages``
+## run in windows
 
-cd into stark_cli
-run `` python dbsetup.py``
+   >$ python stark --help
 
+## run in linux
 
+  >$ chmod +x stark
+
+  >$ ./stark --help

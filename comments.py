@@ -6,10 +6,10 @@ from users import  User
 auth = User()
 
 CONNECTION = psycopg.connect(\
-dbname='starks', \
-user='postgres', \
-host='localhost', \
-password='kaburu@andela'\
+dbname='d9qvciej6svij7', \
+user='fespiavtetjgwe', \
+host='ec2-184-72-247-70.compute-1.amazonaws.com', \
+password='3c3c12bb6a3f2501e64ddb098111c41ee4807c8fd00b0f6e529b6fbf58fc22ed'\
 )
 
 class Comments():
